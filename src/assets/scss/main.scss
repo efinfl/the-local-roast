@@ -1,0 +1,136 @@
+// font-family: 'Oswald', sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap');
+// font-family: 'Noto Sans JP', sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+$green: #177E89;
+$dark-green: #084C61;
+$bright-red: #DB3A34;
+$gold: #FFC857;
+$dark-grey: #323031;
+$light-grey: #B2A7AC;
+$off-white: #fffcf2;
+$black: #131212;
+
+$app-colors: (
+    green: $green,
+    dark-green:$dark-green,
+    bright-red: $bright-red,
+    gold: $gold,
+    dark-grey: $dark-grey,
+    light-grey: $light-grey,
+    off-white: $off-white,
+    black: $black
+    );
+
+
+    
+$jumbo-height: 200px;
+$oswald-font: 'Oswald', sans-serif;
+
+
+// ============= Utility classes ==========
+
+// This creates a map of each color to the attribute passed in. Default is 'back-ground-color'
+@mixin attribute-color($att: 'color') {
+    @each $name, $color in $app-colors {
+      &-#{$name} {
+        #{$att}: $color;
+      }
+    }
+  }
+.bg {
+    @include attribute-color($att: 'background-color');
+    
+}
+.text {
+    @include attribute-color($att: 'color')
+}
+
+body {
+    margin: 0;
+    font-family: 'Noto Sans JP', 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-image: url("../images/linedpaper.png");
+    color: $dark-grey
+  }
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+
+.header {
+    font-weight: 500;
+    font-size: .875rem;
+    margin-top: 2rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    text-transform: uppercase;
+    color: #B2A7AC;
+    border-bottom: dashed 2px #B2A7AC;
+    
+}
+
+.jumbotron {
+    background-image: url(../images/pexels-marta-dzedyshko-2067431.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center 70%;
+    border-radius: 0;
+    
+    
+    h1 {
+        color: white;
+        font-family: $oswald-font;
+        font-weight: 500;
+        font-size:3.5rem;
+        line-height: 100%;
+        @media screen and (max-width: 576px) {
+            font-size: 2.5rem
+        }
+    }
+    p {
+        font-size: 0.875rem;
+        color: $off-white
+        
+    }
+}
+.dashed-lines {
+    // padding: 1rem 0 1rem 0;
+    border-bottom: dashed 2px $dark-grey;
+
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: $light-grey;
+    margin-bottom: 0!important;
+
+    h1 {
+        font-size: 0.875rem;
+        font-family: $oswald-font;
+        line-height: 100%;
+        margin-bottom: 0.05rem;
+        text-transform: uppercase
+        
+    }
+    
+    p {
+        font-size: 0.6875rem;
+    }
+    
+    a {
+        text-decoration: none;
+        color: $light-grey;
+        &:hover {
+            color: $gold;
+        }
+    }
+
+}
