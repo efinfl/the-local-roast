@@ -1,5 +1,5 @@
 import React from "react"
-import {useEffect, useState} from "react"
+import {useState} from "react"
 import axios from "axios"
 
 import Container from "react-bootstrap/Container"
@@ -9,42 +9,30 @@ import Table from "react-bootstrap/Table"
 import Button from "react-bootstrap/Button"
 
 const Content = (props) => {
-    const [coordinates, setCoordinates] = useState({lat: undefined, long: undefined})
     const [venues, setVenues] = useState([])
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(()=>{
-        if (coordinates.lat !== undefined && coordinates.long !== undefined) {
-            console.log(coordinates.lat, coordinates.long)
-            getVenues()
-        }
-    },[coordinates])
-
-   
     const handleGetVenuesClick = () => {
         setIsLoading(true)
-        getCoordinates()
+        getUserLocation()
     }
 
-    const getCoordinates = () => {
-        navigator.geolocation.getCurrentPosition (
-            (position) => {
-                setCoordinates(
-                    {
-                        lat: parseFloat(position.coords.latitude), 
-                        long: parseFloat(position.coords.longitude)
-                    }
-                )
-            }
-        )
+    const getUserLocation = () => {
+        const success  = (position) => {
+           getVenues(position)
+        }
+        const error = (error) => {
+            console.log(error)
+        }
+        navigator.geolocation.getCurrentPosition(success, error)
     }
 
-    const getVenues = () => {
-        console.log(coordinates.lat)
-        console.log(coordinates.lat)
+    const getVenues = (latLong) => {
+        let lat = latLong.coords.latitude
+        let long = latLong.coords.longitude
         let clientId = "WQL4F35RFS2BMBNVUKYJSDZDIEWP4IPOHIW0CKHLWO2YZPUZ"
         let clientSecret = "11OK3MBODQM3HWUWYRYWRHRUVFMFYU5JGWIONSTSXBY5DMS1"
-        let queryUrl = "https://api.foursquare.com/v2/venues/search?client_id=" + clientId + "&client_secret=" + clientSecret + "&ll=" + coordinates.lat + "," + coordinates.long + "&query=coffee&limit=10&v=20181127"
+        let queryUrl = "https://api.foursquare.com/v2/venues/search?client_id=" + clientId + "&client_secret=" + clientSecret + "&ll=" + lat + "," + long + "&query=coffee&limit=10&v=20181127"
 
         axios.get(queryUrl)
             .then((res)=>{
@@ -57,6 +45,7 @@ const Content = (props) => {
                 console.log(error.message)
             })
     }
+
     const renderTableBody = venues.map((venue, i) => {
         console.log(venue.name)
         return (

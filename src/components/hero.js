@@ -10,7 +10,7 @@ const hero = () => {
             <Col className="header bg-dark-grey d-flex justify-content-end ">
                 Find Local, Independent Coffee Shops Near You
             </Col>
-                <Jumbotron sticky="top" className="p-0 d-flex align-items-center mb-1 col-12">
+                <Jumbotron className="p-0 d-flex align-items-center mb-1 col-12">
                     <Container>
                         <Row>
                         <Col xs={6} xs={{offset: 1}} lg={{offset: 2}}>
