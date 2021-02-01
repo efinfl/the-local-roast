@@ -8,6 +8,9 @@ import Col from "react-bootstrap/Col"
 import Table from "react-bootstrap/Table"
 import Button from "react-bootstrap/Button"
 
+const clientId = process.env.REACT_APP_FOURSQUARE_CLIENT_ID;
+const clientSecret = process.env.REACT_APP_FOURSQUARE_CLIENT_SECRET
+
 const Content = (props) => {
     const [venues, setVenues] = useState([])
     const [isLoading, setIsLoading] = useState(false);
@@ -28,10 +31,11 @@ const Content = (props) => {
     }
 
     const getVenues = (latLong) => {
+        
         let lat = latLong.coords.latitude
         let long = latLong.coords.longitude
-        let clientId = "WQL4F35RFS2BMBNVUKYJSDZDIEWP4IPOHIW0CKHLWO2YZPUZ"
-        let clientSecret = "11OK3MBODQM3HWUWYRYWRHRUVFMFYU5JGWIONSTSXBY5DMS1"
+        const clientId = process.env.REACT_APP_FOURSQUARE_CLIENT_ID;
+        const clientSecret = process.env.REACT_APP_FOURSQUARE_CLIENT_SECRET
         let queryUrl = "https://api.foursquare.com/v2/venues/search?client_id=" + clientId + "&client_secret=" + clientSecret + "&ll=" + lat + "," + long + "&query=coffee&limit=10&v=20181127"
 
         axios.get(queryUrl)
@@ -52,8 +56,7 @@ const Content = (props) => {
             <tr key={i}>
                 <td>{venue.name}</td>
                 <td>{(venue.location.distance * 0.000621371192).toFixed(1)}</td>
-                <td>{venue.location.formattedAddress[0]}</td>
-                <td>{venue.location.formattedAddress[1]}</td>
+                <td>{venue.location.formattedAddress[0]}<br/>{venue.location.formattedAddress[1]}}</td>
             </tr>
         )
     })
@@ -73,13 +76,12 @@ const Content = (props) => {
             </Row>
             <Row>
                 <Col xs={12}>
-                    <Table striped hover size="sm">
+                    <Table bordered striped hover size="sm">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Distance</th>
                                 <th>Address</th>
-                                <th>City, State</th>
                             </tr>
                         </thead>
                         <tbody>

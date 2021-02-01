@@ -46,7 +46,7 @@ $oswald-font: 'Oswald', sans-serif;
 .text {
     @include attribute-color($att: 'color')
 }
-
+// =============================================
 body {
     margin: 0;
     font-family: 'Noto Sans JP', 'Segoe UI', 'Roboto', 'Oxygen',
@@ -103,6 +103,10 @@ body {
     // padding: 1rem 0 1rem 0;
     border-bottom: dashed 2px $dark-grey;
 
+}
+
+table {
+    font-size: 14px
 }
 
 .footer {
