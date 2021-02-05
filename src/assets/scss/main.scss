@@ -24,9 +24,17 @@ $app-colors: (
     );
 
 
+$font-weights: (
+    300: 300,
+    400: 400,
+    500: 500,
+    600: 600,
+    700: 700
+);
     
 $jumbo-height: 200px;
 $oswald-font: 'Oswald', sans-serif;
+$noto-font: 'Noto Sans JP', sans-serif;
 
 
 // ============= Utility classes ==========
@@ -39,12 +47,22 @@ $oswald-font: 'Oswald', sans-serif;
       }
     }
   }
+@mixin attribute-font-weight($att: 'font-weight') {
+    @each $name, $weight in $font-weights{
+    &-#{$name} {
+        #{$att}: $weight;
+    }
+    }
+}
 .bg {
     @include attribute-color($att: 'background-color');
     
 }
 .text {
     @include attribute-color($att: 'color')
+}
+.weight {
+    @include attribute-font-weight($att: 'font-weight')
 }
 // =============================================
 body {
@@ -54,14 +72,16 @@ body {
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-image: url("../images/linedpaper.png");
-    color: $dark-grey
-  }
-  
-  code {
+    background-image: url("../images/rockywall.png");
+    color: $dark-grey;
+    min-height: 100vh;
+}
+
+code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-      monospace;
-  }
+    monospace;
+}
+
 
 .header {
     font-weight: 500;
@@ -99,15 +119,8 @@ body {
         
     }
 }
-.dashed-lines {
-    // padding: 1rem 0 1rem 0;
-    border-bottom: dashed 2px $dark-grey;
 
-}
 
-table {
-    font-size: 14px
-}
 
 .footer {
     // position: fixed;
@@ -115,7 +128,7 @@ table {
     // width: 100%;
     color: $light-grey;
     margin-bottom: 0!important;
-
+    
     h1 {
         font-size: 0.875rem;
         font-family: $oswald-font;
@@ -136,5 +149,21 @@ table {
             color: $gold;
         }
     }
+    
+}
+.content {
+    // min-height: 100vh;
+    overflow: auto;
+}
+.dashed-lines {
+    // padding: 1rem 0 1rem 0;
+    border-bottom: dashed 2px $dark-grey;
 
+}
+
+.card-body {
+
+    .h5 {
+        font-family: $oswald-font !important;
+    }
 }
