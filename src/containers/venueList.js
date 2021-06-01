@@ -12,8 +12,9 @@ const VenueList = (props) => {
     const [venues, setVenues] = useState([])
     const [isLoading, setIsLoading] = useState(false);
 
+    // Time before geolocation times out and throws an error
     const geoOptions = {
-        timeout: 5000
+        timeout: 10000
     }
 
     // handles button click to get venues
@@ -66,9 +67,9 @@ const VenueList = (props) => {
     
     // renders the venue cards
     const renderCard = venues.map((venue, i) => {
-        console.log(venue.name)
+        console.log(venue)
         return (
-            <Col key={i} xs="12" sm="6" md="4" lg="4" xl="3" className="mb-3">
+            <Col key={i} xs="12" sm="6" xl="4" className="mb-3">
                 <Card>
                     <Card.Body>
                         <Card.Title>
@@ -81,12 +82,11 @@ const VenueList = (props) => {
                             {venue.location.formattedAddress[0]}<br/>{venue.location.formattedAddress[1]}
                         </Card.Text>
                     </Card.Body>
-                    <div className="card-img-bottom p-5 bg-light-grey">
-                        <MapBox/>
+                    <div className="card-img-bottom">
+                        <MapBox location={venue.location}/>
                     </div>
                 </Card>
             </Col>
-            
         )
     })
     
@@ -106,6 +106,7 @@ const VenueList = (props) => {
             <Row>
                 {renderCard}
             </Row>
+            
         </>
     )
 }

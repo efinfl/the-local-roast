@@ -39,24 +39,23 @@ $noto-font: 'Noto Sans JP', sans-serif;
 
 // ============= Utility classes ==========
 
-// This creates a map of each color to the attribute passed in. Default is 'back-ground-color'
+// This creates a map of each color/weight to the attribute passed in.
 @mixin attribute-color($att: 'color') {
     @each $name, $color in $app-colors {
       &-#{$name} {
         #{$att}: $color;
-      }
+        }
     }
-  }
+}
 @mixin attribute-font-weight($att: 'font-weight') {
     @each $name, $weight in $font-weights{
     &-#{$name} {
         #{$att}: $weight;
-    }
+        }
     }
 }
 .bg {
     @include attribute-color($att: 'background-color');
-    
 }
 .text {
     @include attribute-color($att: 'color')
@@ -81,8 +80,6 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-
 .header {
     font-weight: 500;
     font-size: .875rem;
@@ -94,7 +91,6 @@ code {
     border-bottom: dashed 2px #B2A7AC;
     
 }
-
 .jumbotron {
     background-image: url(../images/pexels-marta-dzedyshko-2067431.jpg);
     background-repeat: no-repeat;
@@ -119,8 +115,6 @@ code {
         
     }
 }
-
-
 
 .footer {
     // position: fixed;
@@ -160,9 +154,7 @@ code {
     border-bottom: dashed 2px $dark-grey;
 
 }
-
 .card-body {
-
     .h5 {
         font-family: $oswald-font !important;
     }
