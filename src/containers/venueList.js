@@ -1,12 +1,14 @@
-import React from "react"
-import {useState} from "react"
-import axios from "axios"
+import React from "react";
+import {useState} from "react";
+import axios from "axios";
 
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
-import Button from "react-bootstrap/Button"
-import Card from "react-bootstrap/Card"
-import MapBox from "../components/mapbox"
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import MapBox from "../components/mapbox";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 
 const VenueList = (props) => {
     const [venues, setVenues] = useState([])
@@ -104,6 +106,7 @@ const VenueList = (props) => {
                 </Col>
             </Row>
             <Row>
+                <FontAwesomeIcon color="red" icon={['fab', 'apple']} />
                 {renderCard}
             </Row>
             

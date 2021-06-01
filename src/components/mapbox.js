@@ -3,6 +3,7 @@ import * as React from 'react';
 import {useState} from 'react';
 import {render} from 'react-dom';
 import ReactMapGL, {Marker} from 'react-map-gl';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN
@@ -29,8 +30,9 @@ function MapBox(props) {
             latitude = {props.location.lat} 
             longitude = {props.location.lng} 
             offsetLeft={-20} offsetTop={-10}>
-            <div>X</div>
+            <FontAwesomeIcon icon="coffee" />
         </Marker>
+        
     </ReactMapGL>
   );
 }
