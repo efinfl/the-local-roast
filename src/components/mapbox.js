@@ -19,7 +19,7 @@ function MapBox(props) {
   return (
     <ReactMapGL
       {...viewport}
-      width="250px"
+      width="100%"
       height="250px"
       mapStyle="mapbox://styles/mapbox/streets-v11"
       onViewportChange={setViewport}
