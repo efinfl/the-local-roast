@@ -5,6 +5,10 @@ import axios from "axios";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import InputGroup from "react-bootstrap/InputGroup";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import Dropdown from "react-bootstrap/Dropdown";
+import FormControl from "react-bootstrap/FormControl";
 import Card from "react-bootstrap/Card";
 import MapBox from "../components/mapbox";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -73,7 +77,7 @@ const VenueList = (props) => {
         return (
             <Col key={i} xs="12" sm="6" xl="4" className="mb-3">
                 <Card>
-                    <Card.Body className="bg-off-white">
+                    <Card.Body>
                         <Card.Title>
                             {venue.name}
                         </Card.Title>
@@ -91,11 +95,34 @@ const VenueList = (props) => {
             </Col>
         )
     })
+
+    // Render number of results selection
+    const numberOfResults = () => {
+        return (
+            <InputGroup className="mb-3">
+                <DropdownButton
+                    as={InputGroup.Prepend}
+                    variant="outline-secondary"
+                    title="Dropdown"
+                    id="input-group-dropdown-1"
+                    size="sm"
+                >
+                    <Dropdown.Item href="#">Action</Dropdown.Item>
+                    <Dropdown.Item href="#">Another action</Dropdown.Item>
+                    <Dropdown.Item href="#">Something else here</Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item href="#">Separated link</Dropdown.Item>
+                </DropdownButton>
+                <FormControl size="sm" aria-describedby="basic-addon1" />
+            </InputGroup>
+        )
+    }
     
     // JSX
     return (
         <>
             <Row className="my-2">
+                {numberOfResults()}
                 <Col className = "d-flex justify-content-end">
                     <Button 
                         variant="danger" 
