@@ -29,8 +29,8 @@ function MapBox(props) {
         <Marker 
             latitude = {props.location.lat} 
             longitude = {props.location.lng} 
-            offsetLeft={-20} offsetTop={-10}>
-            <FontAwesomeIcon icon="coffee" />
+            offsetLeft={0} offsetTop={0}>
+            <FontAwesomeIcon className = "text-bright-red" icon="map-marker-alt"/>
         </Marker>
         
     </ReactMapGL>

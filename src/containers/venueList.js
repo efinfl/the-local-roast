@@ -73,14 +73,14 @@ const VenueList = (props) => {
         return (
             <Col key={i} xs="12" sm="6" xl="4" className="mb-3">
                 <Card>
-                    <Card.Body>
+                    <Card.Body className="bg-off-white">
                         <Card.Title>
                             {venue.name}
                         </Card.Title>
                         <h6><span className="weight-600 text-dark-grey" >Distance</span> 
                             <span>{` ${(venue.location.distance * 0.000621371192).toFixed(1)} Miles`}</span>
                         </h6>
-                        <Card.Text style={{lineHeight: "120%"}}>
+                        <Card.Text style={{lineHeight: "120%"}} className="text-medium-grey">
                             {venue.location.formattedAddress[0]}<br/>{venue.location.formattedAddress[1]}
                         </Card.Text>
                     </Card.Body>
