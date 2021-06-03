@@ -10,13 +10,16 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
 import FormControl from "react-bootstrap/FormControl";
 import Card from "react-bootstrap/Card";
+import Accordion from "react-bootstrap/Accordion";
 import MapBox from "../components/mapbox";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 
 
 const VenueList = (props) => {
     const [venues, setVenues] = useState([])
     const [isLoading, setIsLoading] = useState(false);
+    const [results, setResults] = useState(10)
 
     // Time before geolocation times out and throws an error
     const geoOptions = {
@@ -39,7 +42,7 @@ const VenueList = (props) => {
     const getVenues = (position) => {
         const clientId = process.env.REACT_APP_FOURSQUARE_CLIENT_ID;
         const clientSecret = process.env.REACT_APP_FOURSQUARE_CLIENT_SECRET
-        let queryUrl = "https://api.foursquare.com/v2/venues/search?client_id=" + clientId + "&client_secret=" + clientSecret + "&ll=" + position.coords.latitude + "," + position.coords.longitude + "&query=coffee&limit=10&v=20181127"
+        let queryUrl = "https://api.foursquare.com/v2/venues/search?client_id=" + clientId + "&client_secret=" + clientSecret + "&ll=" + position.coords.latitude + "," + position.coords.longitude + "&query=coffee&limit="+results+"&v=20181127"
 
         axios.get(queryUrl)
             .then((res)=>{
@@ -95,26 +98,52 @@ const VenueList = (props) => {
             </Col>
         )
     })
+    const renderAccordion = venues.map((venue, i) => {
+        console.log(venue)
+        return (
+            
+            <Card>
+                <Card.Header>
+                    <Accordion.Toggle as={Button} variant="link" eventKey={i}>
+                        {venue.name}
+                    </Accordion.Toggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey={i}>
+                        <>
+                    <Card.Body>
+                        <Card.Title>
+                            {venue.name}
+                        </Card.Title>
+                        <h6><span className="weight-600 text-dark-grey" >Distance</span> 
+                            <span>{` ${(venue.location.distance * 0.000621371192).toFixed(1)} Miles`}</span>
+                        </h6>
+                        <Card.Text style={{lineHeight: "120%"}} className="text-medium-grey">
+                            {venue.location.formattedAddress[0]}<br/>{venue.location.formattedAddress[1]}
+                        </Card.Text>
+                    </Card.Body>
+                    <div className="card-img-bottom">
+                        <MapBox location={venue.location}/>
+                    </div>
+                    </>
+                </Accordion.Collapse>
+            </Card>
+        )
+    })
 
     // Render number of results selection
     const numberOfResults = () => {
         return (
-            <InputGroup className="mb-3">
-                <DropdownButton
-                    as={InputGroup.Prepend}
-                    variant="outline-secondary"
-                    title="Dropdown"
-                    id="input-group-dropdown-1"
-                    size="sm"
-                >
-                    <Dropdown.Item href="#">Action</Dropdown.Item>
-                    <Dropdown.Item href="#">Another action</Dropdown.Item>
-                    <Dropdown.Item href="#">Something else here</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item href="#">Separated link</Dropdown.Item>
-                </DropdownButton>
-                <FormControl size="sm" aria-describedby="basic-addon1" />
-            </InputGroup>
+            <Dropdown className="mr-3">
+                <Dropdown.Toggle variant="outline-secondary" id="results-number">
+                    {`${results} Results`}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                    <Dropdown.Item onClick={()=>setResults(5)}>5 Results</Dropdown.Item>
+                    <Dropdown.Item onClick={()=>setResults(10)}>10 Results</Dropdown.Item>
+                    <Dropdown.Item onClick={()=>setResults(20)}>20 Results</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
         )
     }
     
@@ -122,8 +151,8 @@ const VenueList = (props) => {
     return (
         <>
             <Row className="my-2">
-                {numberOfResults()}
                 <Col className = "d-flex justify-content-end">
+                    {numberOfResults()}
                     <Button 
                         variant="danger" 
                         size="sm"
@@ -132,9 +161,12 @@ const VenueList = (props) => {
                     </Button>
                 </Col>
             </Row>
-            <Row>
-                <FontAwesomeIcon color="red" icon={['fab', 'apple']} />
-                {renderCard}
+            <Row className="mb-3">
+                <Col sm="12" >
+                    <Accordion>
+                        {renderAccordion}
+                    </Accordion>
+                </Col>
             </Row>
             
         </>
