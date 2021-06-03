@@ -5,27 +5,54 @@ import axios from "axios";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import InputGroup from "react-bootstrap/InputGroup";
-import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
-import FormControl from "react-bootstrap/FormControl";
 import Card from "react-bootstrap/Card";
-import Accordion from "react-bootstrap/Accordion";
+import Modal from "react-bootstrap/Modal";
 import MapBox from "../components/mapbox";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-
+// Details for a venue endpoint
+// GET https://api.foursquare.com/v2/venues/VENUE_ID
 
 const VenueList = (props) => {
     const [venues, setVenues] = useState([])
+    const [venueDetail, setVenueDetail] = useState({hours: [{days: "", open: [] }], isOpen: ""})
     const [isLoading, setIsLoading] = useState(false);
     const [results, setResults] = useState(10)
+    const [userLocation, setUserLocation] = useState({});
+    const [showModal, setShowModal] = useState(false);
+
+    const clientId = process.env.REACT_APP_FOURSQUARE_CLIENT_ID;
+    const clientSecret = process.env.REACT_APP_FOURSQUARE_CLIENT_SECRET
 
     // Time before geolocation times out and throws an error
     const geoOptions = {
         timeout: 10000
     }
+    const handleModal = () =>{ 
+        const modal = showModal
+        setShowModal(!modal)
+    };
 
+    const detail = (i) => {
+        let selected= venues[i];
+        getVenuesDetails(selected.id)
+    }
+
+    const detailModal = () => {
+        return (
+            <Modal show={showModal} onHide={handleModal}>
+                <Modal.Header closeButton>
+                <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={handleModal}>
+                    Close
+                </Button>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
     // handles button click to get venues
     const handleGetVenuesClick = () => {
         setIsLoading(true)
@@ -40,20 +67,66 @@ const VenueList = (props) => {
     }
     // Gets venues from FourSquare API
     const getVenues = (position) => {
-        const clientId = process.env.REACT_APP_FOURSQUARE_CLIENT_ID;
-        const clientSecret = process.env.REACT_APP_FOURSQUARE_CLIENT_SECRET
-        let queryUrl = "https://api.foursquare.com/v2/venues/search?client_id=" + clientId + "&client_secret=" + clientSecret + "&ll=" + position.coords.latitude + "," + position.coords.longitude + "&query=coffee&limit="+results+"&v=20181127"
+        setUserLocation({lat: position.coords.latitude, lng: position.coords.longitude})
+        let queryUrl = "https://api.foursquare.com/v2/venues/search?client_id=" + 
+                        clientId + 
+                        "&client_secret=" + 
+                        clientSecret + 
+                        "&ll=" + 
+                        position.coords.latitude + 
+                        "," + 
+                        position.coords.longitude + 
+                        "&query=coffee&limit="+
+                        results+"&v=20181127"
 
         axios.get(queryUrl)
             .then((res)=>{
                 setIsLoading(false)
                 let venues = res.data.response.venues
                 setVenues(venues)
-                console.log("venues-------", venues)
             }).catch((error)=>{
                 setIsLoading(false)
                 console.log(error.message)
             })
+    }
+    // Gets details of a specific venue Square API
+    const getVenuesDetails = (venueId) => {
+        let selected = venueId
+        let queryUrl = "https://api.foursquare.com/v2/venues/" + selected + "?client_id=" + clientId + "&client_secret=" + clientSecret + "&v=20181127"
+        console.log(queryUrl)
+        axios.get(queryUrl)
+            .then((res)=>{
+                // console.log("venue details: ", res.data.response.venue)
+                let details = res.data.response.venue
+                extractDetails(details)
+            }).catch((error)=>{
+                console.log("venue details error: ", error.message)
+            })
+    }
+
+    const extractDetails = (details) => {
+        console.log("details.hours: ", details.hours)
+        let newDetails = {}
+        let hours = [];
+        let status = "";
+        //extracts hours of operation
+        if (details.hours) {
+            details.hours.timeframes.forEach((item) => {
+                console.log("item: ", item)
+                let obj = {};
+                let openHours = []
+                item.open.forEach((openTime)=>{
+                    openHours.push(openTime.renderedTime)
+                })
+                
+                obj.days = item.days
+                obj.open = [openHours]
+                hours.push(obj)
+            });
+            newDetails.status = details.hours.status
+        } else console.log("No Hours Prop")
+        newDetails.hours = hours
+        console.log("newDetails: ", newDetails)
     }
     // Handles Geolocation errors
     const geolocationError = (error) => {
@@ -75,58 +148,25 @@ const VenueList = (props) => {
     }
     
     // renders the venue cards
-    const renderCard = venues.map((venue, i) => {
-        console.log(venue)
+    const renderCards = venues.map((venue, i) => {
         return (
             <Col key={i} xs="12" sm="6" xl="4" className="mb-3">
                 <Card>
                     <Card.Body>
-                        <Card.Title>
-                            {venue.name}
+                        <Card.Title className="venue-details">
+                            <span className = "weight-400" onClick={()=>detail(i)}>{venue.name}</span>
                         </Card.Title>
-                        <h6><span className="weight-600 text-dark-grey" >Distance</span> 
-                            <span>{` ${(venue.location.distance * 0.000621371192).toFixed(1)} Miles`}</span>
-                        </h6>
                         <Card.Text style={{lineHeight: "120%"}} className="text-medium-grey">
-                            {venue.location.formattedAddress[0]}<br/>{venue.location.formattedAddress[1]}
+                            <span>{` ${(venue.location.distance * 0.000621371192).toFixed(1)} Miles`}</span><br></br>  
+                            <span>{venue.location.formattedAddress[0]}</span><br></br>
+                            <span>{venue.location.formattedAddress[1]}</span>
                         </Card.Text>
                     </Card.Body>
                     <div className="card-img-bottom">
-                        <MapBox location={venue.location}/>
+                        <MapBox location={venue.location} userLat={userLocation.lat} userLng={userLocation.lng}/>
                     </div>
                 </Card>
             </Col>
-        )
-    })
-    const renderAccordion = venues.map((venue, i) => {
-        console.log(venue)
-        return (
-            
-            <Card>
-                <Card.Header>
-                    <Accordion.Toggle as={Button} variant="link" eventKey={i}>
-                        {venue.name}
-                    </Accordion.Toggle>
-                </Card.Header>
-                <Accordion.Collapse eventKey={i}>
-                        <>
-                    <Card.Body>
-                        <Card.Title>
-                            {venue.name}
-                        </Card.Title>
-                        <h6><span className="weight-600 text-dark-grey" >Distance</span> 
-                            <span>{` ${(venue.location.distance * 0.000621371192).toFixed(1)} Miles`}</span>
-                        </h6>
-                        <Card.Text style={{lineHeight: "120%"}} className="text-medium-grey">
-                            {venue.location.formattedAddress[0]}<br/>{venue.location.formattedAddress[1]}
-                        </Card.Text>
-                    </Card.Body>
-                    <div className="card-img-bottom">
-                        <MapBox location={venue.location}/>
-                    </div>
-                    </>
-                </Accordion.Collapse>
-            </Card>
         )
     })
 
@@ -137,7 +177,6 @@ const VenueList = (props) => {
                 <Dropdown.Toggle variant="outline-secondary" id="results-number">
                     {`${results} Results`}
                 </Dropdown.Toggle>
-
                 <Dropdown.Menu>
                     <Dropdown.Item onClick={()=>setResults(5)}>5 Results</Dropdown.Item>
                     <Dropdown.Item onClick={()=>setResults(10)}>10 Results</Dropdown.Item>
@@ -146,11 +185,11 @@ const VenueList = (props) => {
             </Dropdown>
         )
     }
-    
+    console.log(venues)
     // JSX
     return (
         <>
-            <Row className="my-2">
+            <Row className="my-3">
                 <Col className = "d-flex justify-content-end">
                     {numberOfResults()}
                     <Button 
@@ -162,13 +201,9 @@ const VenueList = (props) => {
                 </Col>
             </Row>
             <Row className="mb-3">
-                <Col sm="12" >
-                    <Accordion>
-                        {renderAccordion}
-                    </Accordion>
-                </Col>
+                {renderCards}
             </Row>
-            
+            {detailModal()}
         </>
     )
 }

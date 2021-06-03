@@ -1,7 +1,6 @@
 //https://www.npmjs.com/package/react-map-gl
 import * as React from 'react';
 import {useState} from 'react';
-import {render} from 'react-dom';
 import ReactMapGL, {Marker} from 'react-map-gl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -25,7 +24,13 @@ function MapBox(props) {
       mapStyle="mapbox://styles/mapbox/streets-v11"
       onViewportChange={setViewport}
       mapboxApiAccessToken={MAPBOX_TOKEN}
-    >
+    >   
+        <Marker 
+            latitude = {props.userLat} 
+            longitude = {props.userLng} 
+            offsetLeft={0} offsetTop={0}>
+            <FontAwesomeIcon className = "text-bright-red" icon="star"/>
+        </Marker>
         <Marker 
             latitude = {props.location.lat} 
             longitude = {props.location.lng} 

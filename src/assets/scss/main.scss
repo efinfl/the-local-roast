@@ -9,7 +9,7 @@ $dark-blue: #017497;
 $bright-red: #DB3A34;
 $gold: #FFC857;
 $dark-grey: #323031;
-$medium-grey: #858484;
+$medium-grey: #70757a;
 $light-grey: #B2A7AC;
 $off-white: #fffcf2;
 $black: #131212;
@@ -163,4 +163,9 @@ code {
     .h5 {
         font-family: $oswald-font !important;
     }
+}
+
+.venue-details:hover {
+    color: $medium-grey;
+    cursor: pointer;
 }

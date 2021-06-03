@@ -4,9 +4,9 @@ import Content from "./components/content"
 import Footer from "./components/footer"
 import Hero from "./components/hero";
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCheckSquare, faCoffee, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
+import { faCheckSquare, faCoffee, faMapMarkerAlt, faStar } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faCheckSquare, faCoffee, faMapMarkerAlt)
+library.add(faCheckSquare, faCoffee, faMapMarkerAlt, faStar)
 
 function App() {
   return (
