@@ -4,6 +4,7 @@ import axios from "axios";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import Card from "react-bootstrap/Card";
@@ -151,7 +152,7 @@ const VenueList = (props) => {
     const renderCards = venues.map((venue, i) => {
         return (
             <Col key={i} xs="12" sm="6" xl="4" className="mb-3">
-                <Card>
+                <Card noGutters = {true}>
                     <Card.Body>
                         <Card.Title className="venue-details">
                             <span className = "weight-400" onClick={()=>detail(i)}>{venue.name}</span>
@@ -169,8 +170,27 @@ const VenueList = (props) => {
             </Col>
         )
     })
+    const renderListItem = venues.map((venue, i) => {
+        return(
+            <>
+                <Col key={i} xs="12">
+                    <h6>
+                        {venue.name}
+                    </h6>
+                    <div className="text-medium-grey">
+                        <span>{`${(venue.location.distance * 0.000621371192).toFixed(1)} Miles`}</span><br></br>  
+                        <span>{venue.location.formattedAddress[0]}</span><br></br>
+                        <span>{venue.location.formattedAddress[1]}</span>
+                    </div>
+                    <hr></hr>
+                </Col>
+            </>
+        )
+    })
 
-    // Render number of results selection
+    
+
+    // Dropdown for selecting number of results
     const numberOfResults = () => {
         return (
             <Dropdown className="mr-3">
@@ -201,7 +221,8 @@ const VenueList = (props) => {
                 </Col>
             </Row>
             <Row className="mb-3">
-                {renderCards}
+                {/* {renderCards} */}
+                {renderListItem}
             </Row>
             {detailModal()}
         </>
