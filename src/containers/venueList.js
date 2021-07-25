@@ -16,6 +16,7 @@ import MapBox from "../components/mapbox";
 
 const VenueList = (props) => {
     const [venues, setVenues] = useState([])
+    const [venuesTableData, setVenuesTableData] = useState([])
     const [venueDetail, setVenueDetail] = useState({hours: [{days: "", open: [] }], isOpen: ""})
     const [isLoading, setIsLoading] = useState(false);
     const [results, setResults] = useState(10)
@@ -85,10 +86,25 @@ const VenueList = (props) => {
                 setIsLoading(false)
                 let venues = res.data.response.venues
                 setVenues(venues)
+                venuesListData(venues)
             }).catch((error)=>{
                 setIsLoading(false)
                 console.log(error.message)
             })
+    }
+    // further simplifies data structure for table render
+    const venuesListData = (data) => {
+        let newDataArray = [];
+        data.forEach((venue) => {
+            let obj = {
+                name: venue.name,
+                distance: (venue.location.distance * 0.000621371192).toFixed(1),
+                address: `${venue.location.formattedAddress[0]}, ${venue.location.formattedAddress[1]}`
+            }
+            newDataArray.push(obj)
+        })
+        setVenuesTableData(newDataArray)
+        
     }
     // Gets details of a specific venue Square API
     const getVenuesDetails = (venueId) => {
@@ -204,19 +220,17 @@ const VenueList = (props) => {
             </Table>
         )
     }
-    const renderListTableBody = venues.map((venue, i)=> {
+    const renderListTableBody = venuesTableData.map((venue, i)=> {
         return (
             <tr key={i} >
                 <td>{venue.name}</td>
-                <td>{(venue.location.distance * 0.000621371192).toFixed(1)}</td>
-                <td>{venue.location.formattedAddress[0]}, {venue.location.formattedAddress[1]}</td>
+                <td>{venue.distance}</td>
+                <td>{venue.address}</td>
             </tr>
         )
         
     })
-
     
-
     // Dropdown for selecting number of results
     const numberOfResults = () => {
         return (
@@ -232,7 +246,6 @@ const VenueList = (props) => {
             </Dropdown>
         )
     }
-    console.log(venues)
     // JSX
     return (
         <>
