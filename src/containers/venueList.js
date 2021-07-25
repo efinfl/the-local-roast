@@ -170,22 +170,49 @@ const VenueList = (props) => {
             </Col>
         )
     })
-    const renderListItem = venues.map((venue, i) => {
-        return(
-            <>
-                <Col key={i} xs="12">
-                    <h6>
-                        {venue.name}
-                    </h6>
-                    <div className="text-medium-grey">
-                        <span>{`${(venue.location.distance * 0.000621371192).toFixed(1)} Miles`}</span><br></br>  
-                        <span>{venue.location.formattedAddress[0]}</span><br></br>
-                        <span>{venue.location.formattedAddress[1]}</span>
-                    </div>
-                    <hr></hr>
-                </Col>
-            </>
+    // const renderListItem = venues.map((venue, i) => {
+    //     return(
+    //         <>
+    //             <Col key={i} xs="12">
+    //                 <h6>
+    //                     {venue.name}
+    //                 </h6>
+    //                 <div className="text-medium-grey">
+    //                     <span>{`${(venue.location.distance * 0.000621371192).toFixed(1)} Miles`}</span><br></br>  
+    //                     <span>{venue.location.formattedAddress[0]}</span><br></br>
+    //                     <span>{venue.location.formattedAddress[1]}</span>
+    //                 </div>
+    //                 <hr></hr>
+    //             </Col>
+    //         </>
+    //     )
+    // })
+    
+    const renderListTable = () => {
+        return (
+            <Table hover border>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Distance</th>
+                        <th>Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {renderListTableBody}
+                </tbody>
+            </Table>
         )
+    }
+    const renderListTableBody = venues.map((venue, i)=> {
+        return (
+            <tr key={i} >
+                <td>{venue.name}</td>
+                <td>{(venue.location.distance * 0.000621371192).toFixed(1)}</td>
+                <td>{venue.location.formattedAddress[0]}, {venue.location.formattedAddress[1]}</td>
+            </tr>
+        )
+        
     })
 
     
@@ -222,7 +249,8 @@ const VenueList = (props) => {
             </Row>
             <Row className="mb-3">
                 {/* {renderCards} */}
-                {renderListItem}
+                {/* {renderListItem} */}
+                {renderListTable()}
             </Row>
             {detailModal()}
         </>

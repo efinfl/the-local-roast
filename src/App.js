@@ -11,9 +11,11 @@ library.add(faCheckSquare, faCoffee, faMapMarkerAlt, faStar)
 function App() {
   return (
     <Container fluid>
-      <Hero/>
-      <Content/>
-      <Footer/>
+      <div className="app-wrapper">
+        <Hero/>
+        <Content/>
+        <Footer/>
+      </div>
     </Container>
   );
 }
