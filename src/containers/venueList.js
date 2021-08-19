@@ -15,11 +15,12 @@ import MapBox from "../components/mapbox";
 // GET https://api.foursquare.com/v2/venues/VENUE_ID
 
 const VenueList = (props) => {
-    const [venues, setVenues] = useState([])
-    const [venuesTableData, setVenuesTableData] = useState([])
+    const [venues, setVenues] = useState([]);
+    const [venuesTableData, setVenuesTableData] = useState([]);
+    const [sortedField, setSortedField] = useState(null)
     const [venueDetail, setVenueDetail] = useState({hours: [{days: "", open: [] }], isOpen: ""})
     const [isLoading, setIsLoading] = useState(false);
-    const [results, setResults] = useState(10)
+    const [results, setResults] = useState(10);
     const [userLocation, setUserLocation] = useState({});
     const [showModal, setShowModal] = useState(false);
 
@@ -209,8 +210,8 @@ const VenueList = (props) => {
             <Table hover border>
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Distance</th>
+                        <th class = "sorted-field" onClick={() => setSortedField("name")}>Name</th>
+                        <th class = "sorted-field" onClick={() => setSortedField("distance")}>Distance</th>
                         <th>Address</th>
                     </tr>
                 </thead>
@@ -220,6 +221,7 @@ const VenueList = (props) => {
             </Table>
         )
     }
+    console.log(sortedField)
     const renderListTableBody = venuesTableData.map((venue, i)=> {
         return (
             <tr key={i} >

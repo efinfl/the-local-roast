@@ -179,7 +179,8 @@ code {
     }
 }
 
-.venue-details:hover {
+.venue-details:hover, .sorted-field:hover {
     color: $medium-grey;
     cursor: pointer;
 }
+
