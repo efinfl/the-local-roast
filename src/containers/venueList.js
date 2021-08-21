@@ -165,7 +165,7 @@ const VenueList = (props) => {
           }
     }
     
-    // renders the venue cards
+    // renders the venue cards ---May use as popup---
     const renderCards = venues.map((venue, i) => {
         return (
             <Col key={i} xs="12" sm="6" xl="4" className="mb-3">
@@ -187,23 +187,6 @@ const VenueList = (props) => {
             </Col>
         )
     })
-    // const renderListItem = venues.map((venue, i) => {
-    //     return(
-    //         <>
-    //             <Col key={i} xs="12">
-    //                 <h6>
-    //                     {venue.name}
-    //                 </h6>
-    //                 <div className="text-medium-grey">
-    //                     <span>{`${(venue.location.distance * 0.000621371192).toFixed(1)} Miles`}</span><br></br>  
-    //                     <span>{venue.location.formattedAddress[0]}</span><br></br>
-    //                     <span>{venue.location.formattedAddress[1]}</span>
-    //                 </div>
-    //                 <hr></hr>
-    //             </Col>
-    //         </>
-    //     )
-    // })
     
     const renderListTable = () => {
         return (
@@ -263,8 +246,6 @@ const VenueList = (props) => {
                 </Col>
             </Row>
             <Row className="mb-3">
-                {/* {renderCards} */}
-                {/* {renderListItem} */}
                 {renderListTable()}
             </Row>
             {detailModal()}
