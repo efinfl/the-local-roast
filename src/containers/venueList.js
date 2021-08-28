@@ -1,6 +1,7 @@
 import React from "react";
 import {useState} from "react";
 import axios from "axios";
+import {useSelector} from "react-redux"
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -23,6 +24,9 @@ const VenueList = (props) => {
     const [results, setResults] = useState(10);
     const [userLocation, setUserLocation] = useState({});
     const [showModal, setShowModal] = useState(false);
+
+    const testStore = useSelector((state) => state.main.test)
+    console.log(testStore)
 
     const clientId = process.env.REACT_APP_FOURSQUARE_CLIENT_ID;
     const clientSecret = process.env.REACT_APP_FOURSQUARE_CLIENT_SECRET
@@ -98,6 +102,7 @@ const VenueList = (props) => {
         let newDataArray = [];
         data.forEach((venue) => {
             let obj = {
+                id: venue.id,
                 name: venue.name,
                 distance: (venue.location.distance * 0.000621371192).toFixed(1),
                 address: `${venue.location.formattedAddress[0]}, ${venue.location.formattedAddress[1]}`
@@ -107,6 +112,7 @@ const VenueList = (props) => {
         setVenuesTableData(newDataArray)
         
     }
+   
     // Gets details of a specific venue Square API
     const getVenuesDetails = (venueId) => {
         let selected = venueId
@@ -204,10 +210,14 @@ const VenueList = (props) => {
             </Table>
         )
     }
-    console.log(sortedField)
+    
+    const handleClickedListItem = (venue) => {
+        const id = venue
+        console.log(id)
+    }
     const renderListTableBody = venuesTableData.map((venue, i)=> {
         return (
-            <tr key={i} >
+            <tr key={i} onClick = {() => handleClickedListItem(venue.id)}>
                 <td>{venue.name}</td>
                 <td>{venue.distance}</td>
                 <td>{venue.address}</td>
@@ -215,7 +225,7 @@ const VenueList = (props) => {
         )
         
     })
-    
+
     // Dropdown for selecting number of results
     const numberOfResults = () => {
         return (

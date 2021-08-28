@@ -1,12 +1,13 @@
 const initialState = {
-    tbd: ""
+    test: "Hello World"
 }
 
 const mainReducer = ((state = initialState, action)=>{
     switch (action.type) {
-        case "tbd":
+        case "test":
             console.log(action.payload)
-        default: console.log("no action")
+            break
+        default: return initialState
     }
 })
 
