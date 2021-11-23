@@ -122,21 +122,18 @@ const VenueList = (props) => {
             .then((res)=>{
                 // console.log("venue details: ", res.data.response.venue)
                 let details = res.data.response.venue
-                extractDetails(details)
+                extractDetails(details).then(extracted => console.log("extracted details", extracted))
             }).catch((error)=>{
                 console.log("venue details error: ", error.message)
             })
     }
 
     const extractDetails = (details) => {
-        console.log("details.hours: ", details.hours)
         let newDetails = {}
-        let hours = [];
-        let status = "";
         //extracts hours of operation
         if (details.hours) {
+            let hours = [];
             details.hours.timeframes.forEach((item) => {
-                console.log("item: ", item)
                 let obj = {};
                 let openHours = []
                 item.open.forEach((openTime)=>{
@@ -147,10 +144,10 @@ const VenueList = (props) => {
                 obj.open = [openHours]
                 hours.push(obj)
             });
+            newDetails.hours = hours
             newDetails.status = details.hours.status
-        } else console.log("No Hours Prop")
-        newDetails.hours = hours
-        console.log("newDetails: ", newDetails)
+        }
+        return newDetails
     }
     // Handles Geolocation errors
     const geolocationError = (error) => {
@@ -193,6 +190,28 @@ const VenueList = (props) => {
             </Col>
         )
     })
+    const handleClickedListItem = (id) => {
+        getClickedDetails(id).then(details => console.log("details", details))
+    }
+    const getClickedDetails = (venueId) => {
+        return new Promise ((resolve, reject) => {
+                const details = getVenuesDetails(venueId)
+                if (details!== null) {
+                    console.log(details)
+                    resolve(details)
+                } else reject("an error occurred in getVenuesDetails")
+        })
+        }
+
+    const renderListTableBody = venuesTableData.map((venue, i)=> {
+        return (
+            <tr key={i} onClick = {() => handleClickedListItem(venue.id)}>
+                <td>{venue.name}</td>
+                <td>{venue.distance}</td>
+                <td>{venue.address}</td>
+            </tr>
+        )
+    })
     
     const renderListTable = () => {
         return (
@@ -210,21 +229,6 @@ const VenueList = (props) => {
             </Table>
         )
     }
-    
-    const handleClickedListItem = (venue) => {
-        const id = venue
-        console.log(id)
-    }
-    const renderListTableBody = venuesTableData.map((venue, i)=> {
-        return (
-            <tr key={i} onClick = {() => handleClickedListItem(venue.id)}>
-                <td>{venue.name}</td>
-                <td>{venue.distance}</td>
-                <td>{venue.address}</td>
-            </tr>
-        )
-        
-    })
 
     // Dropdown for selecting number of results
     const numberOfResults = () => {
