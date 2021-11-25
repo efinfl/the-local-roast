@@ -1,5 +1,4 @@
-import React from "react";
-import {useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {useSelector} from "react-redux"
 
@@ -11,6 +10,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import MapBox from "../components/mapbox";
+import {sortFn} from "../helpers/sortHelper"
 
 // Details for a venue endpoint
 // GET https://api.foursquare.com/v2/venues/VENUE_ID
@@ -19,6 +19,7 @@ const VenueList = (props) => {
     const [venues, setVenues] = useState([]);
     const [venuesTableData, setVenuesTableData] = useState([]);
     const [sortedField, setSortedField] = useState(null)
+    const [sortedVenuesTableData, setSortedVenuesTableData] = useState(null)
     const [venueDetail, setVenueDetail] = useState({hours: [{days: "", open: [] }], isOpen: ""})
     const [isLoading, setIsLoading] = useState(false);
     const [results, setResults] = useState(10);
@@ -26,10 +27,15 @@ const VenueList = (props) => {
     const [showModal, setShowModal] = useState(false);
 
     const testStore = useSelector((state) => state.main.test)
-    console.log(testStore)
 
     const clientId = process.env.REACT_APP_FOURSQUARE_CLIENT_ID;
     const clientSecret = process.env.REACT_APP_FOURSQUARE_CLIENT_SECRET
+
+    //Checks for changes to sort field to trigger sorting
+    useEffect(()=>{
+        let sortedTableData = sortData()
+        setSortedVenuesTableData(sortedTableData)
+    },[sortedField])
 
     // Time before geolocation times out and throws an error
     const geoOptions = {
@@ -202,7 +208,7 @@ const VenueList = (props) => {
                 } else reject("an error occurred in getVenuesDetails")
         })
         }
-
+    
     const renderListTableBody = venuesTableData.map((venue, i)=> {
         return (
             <tr key={i} onClick = {() => handleClickedListItem(venue.id)}>
@@ -228,6 +234,11 @@ const VenueList = (props) => {
                 </tbody>
             </Table>
         )
+    }
+    
+    const sortData = () => {
+
+        sortFn(venuesTableData, sortedField)
     }
 
     // Dropdown for selecting number of results
