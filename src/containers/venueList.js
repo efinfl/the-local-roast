@@ -19,7 +19,7 @@ const VenueList = (props) => {
     const [venues, setVenues] = useState([]);
     const [venuesTableData, setVenuesTableData] = useState([]);
     const [sortedField, setSortedField] = useState(null)
-    const [sortedVenuesTableData, setSortedVenuesTableData] = useState(null)
+    const [sortedVenuesTableData, setSortedVenuesTableData] = useState([])
     const [venueDetail, setVenueDetail] = useState({hours: [{days: "", open: [] }], isOpen: ""})
     const [isLoading, setIsLoading] = useState(false);
     const [results, setResults] = useState(10);
@@ -31,10 +31,14 @@ const VenueList = (props) => {
     const clientId = process.env.REACT_APP_FOURSQUARE_CLIENT_ID;
     const clientSecret = process.env.REACT_APP_FOURSQUARE_CLIENT_SECRET
 
-    //Checks for changes to sort field to trigger sorting
+    //Checks for changes to sortedField to trigger sorting
     useEffect(()=>{
-        let sortedTableData = sortData()
-        setSortedVenuesTableData(sortedTableData)
+        //check for null because it detects change from undefined to null
+        if (sortedField !== null){
+            let sortedTableData = sortFn(venuesTableData, sortedField)
+            console.log(sortedTableData)
+            setSortedVenuesTableData(sortedTableData)
+        }
     },[sortedField])
 
     // Time before geolocation times out and throws an error
@@ -68,6 +72,7 @@ const VenueList = (props) => {
     }
     // handles button click to get venues
     const handleGetVenuesClick = () => {
+        setSortedVenuesTableData([])
         setIsLoading(true)
         getUserLocation()
     }
@@ -110,7 +115,7 @@ const VenueList = (props) => {
             let obj = {
                 id: venue.id,
                 name: venue.name,
-                distance: (venue.location.distance * 0.000621371192).toFixed(1),
+                distance: Number((venue.location.distance * 0.000621371192).toFixed(1)),
                 address: `${venue.location.formattedAddress[0]}, ${venue.location.formattedAddress[1]}`
             }
             newDataArray.push(obj)
@@ -118,7 +123,7 @@ const VenueList = (props) => {
         setVenuesTableData(newDataArray)
         
     }
-   
+    
     // Gets details of a specific venue Square API
     const getVenuesDetails = (venueId) => {
         let selected = venueId
@@ -219,6 +224,15 @@ const VenueList = (props) => {
         )
     })
     
+    const renderListTableBodySorted = sortedVenuesTableData.map((venue, i)=> {
+        return (
+            <tr key={i} onClick = {() => handleClickedListItem(venue.id)}>
+                <td>{venue.name}</td>
+                <td>{venue.distance}</td>
+                <td>{venue.address}</td>
+            </tr>
+        )
+    })
     const renderListTable = () => {
         return (
             <Table hover border>
@@ -230,16 +244,14 @@ const VenueList = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {renderListTableBody}
+                    {sortedVenuesTableData.length>0 && sortedVenuesTableData!== undefined? renderListTableBodySorted:renderListTableBody}
+                    {/* {renderListTableBody} */}
                 </tbody>
             </Table>
         )
     }
     
-    const sortData = () => {
-
-        sortFn(venuesTableData, sortedField)
-    }
+   
 
     // Dropdown for selecting number of results
     const numberOfResults = () => {

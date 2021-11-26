@@ -5,8 +5,6 @@ export const sortFn = (data, sortField) => {
     console.log(sortField)
     if (sortField !== null) {
         sortedData.sort((a, b) => {
-            console.log(a[sortField])
-            console.log(b[sortField])
           if (a[sortField] < b[sortField]) {
             return -1;
           }
